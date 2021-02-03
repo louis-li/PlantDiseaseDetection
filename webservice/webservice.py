@@ -3,7 +3,7 @@ from tensorflow.keras import backend
 from tensorflow.keras.models import load_model
 import cv2
 import numpy as np
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, send_from_directory
 from werkzeug.utils import secure_filename
 import imghdr
 import os
@@ -28,8 +28,9 @@ def load_model_to_app():
     
 @app.route("/")
 def index():
-    #pred = app.config['CLASS'] 
-    return render_template('upload.html', pred='')
+    #files = os.listdir(app.config['UPLOAD_PATH'])
+    #print('files: ', files)
+    return render_template('upload.html', pred='', files = [])
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -39,7 +40,7 @@ def predict():
     print(nparr)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     img = cv2.resize(img, (image_size,image_size), interpolation = cv2.INTER_AREA)
-    cv2.imwrite('test.jpg',img)
+    #cdcv2.imwrite('test.jpg',img)
     predictions = app.predictor.predict(img.reshape(-1,image_size,image_size,3))
     print('INFO Predictions: {}'.format(predictions))
 
@@ -69,9 +70,18 @@ def upload_file():
 
         class_ = np.where(predictions == np.amax(predictions, axis=1))[1][0]
         classnames = ['healthy','multiple diseases', 'rust', 'scab']
-        #app.config['CLASS'] = classnames[class_]
-    return render_template('upload.html', pred=classnames[class_])
+        files = os.listdir(app.config['UPLOAD_PATH'])
+        print('files: ', files)
+    return render_template('upload.html', pred=classnames[class_], files = files)
 
+@app.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory(app.config['UPLOAD_PATH'], filename)
+
+
+@app.errorhandler(413)
+def too_large(e):
+    return "File is too large", 413
 
 def main():
     """Run the app."""
