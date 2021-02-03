@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block head%}
+
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>IRIS PREDICTOR</h1>
+
+    <form action="/predict" method="POST">
+        <div>
+            <p>Spatial Length</p>
+            <input type="text" name = "spatial_length" id="spatial_length">
+        </div>
+        
+        <div>
+            <p>Spatial Width</p>
+            <input type="text" name = "spatial_width" id="spatial_width">
+        </div>
+
+        <div>
+            <p>Petal Length</p>
+            <input type="text" name = "petal_length" id="petal_length">
+        </div>
+
+        <div>
+            <p>Petal Width</p>
+            <input type="text" name = "petal_width" id="petal_width">
+        </div>
+
+        <input type="submit" value="Predict">
+    </form>
+    <h2>Predicted: {{pred}}</h2>
+</div>
+{% endblock %}

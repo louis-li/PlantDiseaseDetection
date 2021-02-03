@@ -1,3 +1,6 @@
 .ipynb_checkpoints/
 data/
 simclr/
+models
+submissions
+archive
