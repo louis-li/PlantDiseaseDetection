@@ -8,6 +8,7 @@
 
     form {
       width: 600px;
+      height: 600px;
       background: #ccc;
       margin: 0 auto;
       padding: 20px;
@@ -28,7 +29,8 @@
     }
 
     form img {
-      height: 64px;
+      height: 250px;
+      width: 250px;
       order: 1;
     }
 
@@ -71,15 +73,16 @@
   <body>
     <h1>Upload your image: </h1>
     <form method="POST" action="" enctype="multipart/form-data">
-      <p><input type="file" name="file" onchange="preview_image(event)"></p>
-      <p><img id="output_image" height="250px" width="250px" ></p>
+      <label for="file">Choose images to upload (PNG, JPG)</label>
+      <p><input type="file" name-"file" onchange="preview_image(event)"></p>
+      <p><img id="output_image" ></p>
 
       <p><input type="submit" value="Submit" style="height=100;width:100%"></p>
     </form>
     <h2>Predicted: {{pred}}</h2>
     <hr>
     {% for file in files %}
-      <img src="{{ url_for('upload', filename=file) }}"  height="250px" width="250px">
+      <img src="{{ url_for('upload', filename=file) }}"  height="100px" width="100px">
     {% endfor %}
   </body>
 </html>
