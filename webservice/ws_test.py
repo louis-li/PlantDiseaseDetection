@@ -28,7 +28,8 @@ def validate_image(stream):
 
 @app.route("/")
 def index():
-    return render_template('upload_preview.html', pred=0)
+    print(request)
+    return render_template('test.html', pred=0)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -46,7 +47,8 @@ def predict():
 @app.route('/', methods=['POST'])
 def upload_file():
     print("Update - ", end='')
-    uploaded_file = request.files['file']
+    print(request.files)
+    uploaded_file = request.files['image_uploads']
     filename = secure_filename(uploaded_file.filename)
     print(filename)
     if filename != '':

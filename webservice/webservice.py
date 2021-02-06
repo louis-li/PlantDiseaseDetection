@@ -10,7 +10,7 @@ import os
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif', 'jpeg']
 app.config['UPLOAD_PATH'] = 'uploads'
 app.config['IMAGE_SIZE'] = 299
 app.config['CLASS'] = ''
@@ -22,6 +22,12 @@ def validate_image(stream):
         return None
     return '.' + (format if format != 'jpeg' else 'jpg')
 
+def getfiles(dirpath):
+    a = [s for s in os.listdir(dirpath)
+         if os.path.isfile(os.path.join(dirpath, s))]
+    a.sort(key=lambda s: os.path.getmtime(os.path.join(dirpath, s)))
+    return a
+
 @app.before_first_request
 def load_model_to_app():
     app.predictor = load_model('../models/InceptionResNetV2')
@@ -30,7 +36,7 @@ def load_model_to_app():
 def index():
     #files = os.listdir(app.config['UPLOAD_PATH'])
     #print('files: ', files)
-    return render_template('upload.html', pred='', files = [])
+    return render_template('index.html', pred='', files = [])
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -52,7 +58,7 @@ def predict():
 def upload_file():
     print("Upload - ", end='')
     image_size = app.config['IMAGE_SIZE']
-    uploaded_file = request.files['file']
+    uploaded_file = request.files['image_uploads']
     filename = secure_filename(uploaded_file.filename)
     print(filename)
     if filename != '':
@@ -70,9 +76,11 @@ def upload_file():
 
         class_ = np.where(predictions == np.amax(predictions, axis=1))[1][0]
         classnames = ['healthy','multiple diseases', 'rust', 'scab']
-        files = os.listdir(app.config['UPLOAD_PATH'])
+        #files = getfiles(app.config['UPLOAD_PATH'])
+        files = [filename]
         print('files: ', files)
-    return render_template('upload.html', pred=classnames[class_], files = files)
+        return render_template('index.html', pred=classnames[class_], files = files)
+    return render_template('index.html', pred='')
 
 @app.route('/uploads/<filename>')
 def upload(filename):
