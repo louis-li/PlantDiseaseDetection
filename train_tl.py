@@ -57,7 +57,7 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
     y_train = np.argmax(y_train,axis=1)
     y_val = np.argmax(y_val,axis=1)
 
-    importlib.import_module("data_load")
+    #importlib.import_module("data_load")
     
     # Warm up head
     adam = optimizers.Adam(learning_rate=warm_up_learning_rate)
@@ -133,4 +133,4 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
                         verbose=True
                        )
                        
-    return model, history.extend(history2)
+    return model, np.array(history).extend(history2)
