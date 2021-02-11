@@ -82,7 +82,7 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
 
     model.compile(optimizer=adam, 
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-                  metrics=[tf.keras.metrics.SparseCategoricalCrossentropy()])
+                  metrics=[tf.keras.metrics.SparseCategoricalCrossentropy(), 'accuracy'])
 
 
     history = model.fit(data_load.generator_with_label(x_train, y_train, batch_size),  
@@ -116,7 +116,7 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
 
     model.compile(optimizer=adam, 
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['accuracy'])
+                  metrics=['accuracy', 'loss'])
 
     history2 = model.fit(data_load.generator_with_label(x_train, y_train, batch_size),  
                         shuffle=True,  
@@ -132,5 +132,5 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
                         steps_per_epoch=len(x_train)/batch_size ,
                         verbose=True
                        )
-                       
-    return model, np.array(history).extend(history2)
+    #print(history)                   
+    return model, [history, history2]
