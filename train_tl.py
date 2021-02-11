@@ -22,6 +22,7 @@ from os import listdir
 from os.path import isfile, join
 
 import importlib
+import data_load
 
 
 # import image data and combine labels
