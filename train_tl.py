@@ -82,7 +82,7 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
 
     model.compile(optimizer=adam, 
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-                  metrics=[tf.keras.metrics.SparseCategoricalCrossentropy(), 'accuracy'])
+                  metrics=[tf.keras.metrics.SparseCategoricalCrossentropy(), tf.keras.metrics.SparseCategoricalAccuracy()])
 
 
     history = model.fit(data_load.generator_with_label(x_train, y_train, batch_size),  
@@ -97,12 +97,12 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
     # Train entire network
     adam = optimizers.Adam(learning_rate=learning_rate)
     #lr_scheduler = tf.keras.callbacks.LearningRateScheduler(scheduler)
-    reduce_lr = ReduceLROnPlateau(monitor='val_accuracy', 
+    reduce_lr = ReduceLROnPlateau(monitor='val_sparse_categorical_crossentropy', 
                                factor=0.2,  
                                patience=reduce_lr_patience , 
                                min_lr=min_lr)
     early_stop = EarlyStopping(
-        monitor='val_accuracy', 
+        monitor='val_sparse_categorical_crossentropy', 
         min_delta=0, 
         patience=early_stop_patience, 
         verbose=0, 
@@ -115,8 +115,8 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
         l.trainable = True
 
     model.compile(optimizer=adam, 
-                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['accuracy', 'loss'])
+                  loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+                  metrics=[tf.keras.metrics.SparseCategoricalCrossentropy(), tf.keras.metrics.SparseCategoricalAccuracy()])
 
     history2 = model.fit(data_load.generator_with_label(x_train, y_train, batch_size),  
                         shuffle=True,  
