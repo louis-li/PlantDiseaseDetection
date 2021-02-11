@@ -5,7 +5,7 @@ import os
 import numpy as np
 import random
 
-def generator(features, batch_size):
+def getImageAug():
     seq = iaa.Sequential([
         iaa.OneOf([
             iaa.AverageBlur(k=((3, 5), (5, 7))),
@@ -32,9 +32,13 @@ def generator(features, batch_size):
            ])
         #,iaa.SaveDebugImageEveryNBatches(folder_path, 100)    
     ], random_order=True)
+    return seq
+    
+    
 
     
-    
+def generator(features, batch_size):
+    seq = getImageAug()
     while True:
         # Fill arrays of batch size with augmented data taken randomly from full passed arrays
         indexes = random.sample(range(len(features)), batch_size)
@@ -43,6 +47,18 @@ def generator(features, batch_size):
         x_aug_1 = seq(images =features[indexes])
         x_aug_2 = seq(images =features[indexes])
         yield np.array(x_aug_1), np.array(x_aug_2)
+        
+        
+def generator_with_label(features, labels, batch_size):
+    seq = getImageAug()
+    while True:
+        # Fill arrays of batch size with augmented data taken randomly from full passed arrays
+        indexes = random.sample(range(len(features)), batch_size)
+      
+        # Transform X and y
+        x_aug = seq(images =features[indexes])
+        yield np.array(x_aug,'uint8'), np.array(labels[indexes])
+
 
 # import image data and combine labels
 def load_unlabeled_data(image_size, image_dir, extension = '.JPG'):

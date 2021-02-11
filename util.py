@@ -2,8 +2,9 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sn
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-def showConfusionMatrix(model, x, y labels = ['healthy', 'multiple_diseases', 'rust', 'scab'])
+def showConfusionMatrix(model, x, y, labels = ['healthy', 'multiple_diseases', 'rust', 'scab']):
     
     y_pred = np.argmax(model.predict(x), axis=1)
     mat = confusion_matrix(y, y_pred)

@@ -2,6 +2,7 @@ import tensorflow as tf
 import math
 from tensorflow.keras.experimental import CosineDecay
 from data_load import generator
+import numpy as np
 
 def add_to_summary(summary_writer, loss, learning_rate, image1, image2, iteration):
     """Adds loss, learning_rate and images to tensorflow summary"""
@@ -117,12 +118,12 @@ def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, c
                 summary_writer.flush()
         save_path = manager.save()
         print(f"Saved checkpoint for Epoch {e}: {save_path}")
-        print("loss {:1.2f}".format(np.mean(epoch_loss))
-    
-    
+        print("loss {:1.2f}".format(np.mean(epoch_loss)))
+
     # train all layers
     for l in model.layers:
         l.trainable = True
+        
     for e in range(total_epoch):
         epoch_loss = [] 
         checkpoint = tf.train.Checkpoint(step=tf.Variable(1), optimizer=optimizer, net=model)
