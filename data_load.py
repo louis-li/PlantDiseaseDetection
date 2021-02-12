@@ -7,16 +7,12 @@ import random
 
 def getImageAug():
     seq = iaa.Sequential([
-        iaa.OneOf([
+        iaa.SomeOf((0,2),[
+            iaa.Identity(),
             iaa.AverageBlur(k=((3, 5), (5, 7))),
             iaa.Rotate((-45,45)),
             iaa.Affine(scale=(0.5, 0.95)),    
             iaa.Multiply((0.50, 1.1))
-            , iaa.Fliplr(1.0)
-            , iaa.Flipud(1.0)
-            , iaa.GammaContrast((0.5, 2.0))
-            , iaa.WithBrightnessChannels(iaa.Add((-50, 50)), from_colorspace=iaa.CSPACE_BGR)
-            ,iaa.WithHueAndSaturation(iaa.WithChannels(0, iaa.Add((0, 50))))
             #,iaa.BlendAlphaRegularGrid(nb_rows=(4, 6), nb_cols=(1, 4),
             #                        foreground=iaa.Multiply(0.0))
             #,iaa.Cartoon()
@@ -61,13 +57,13 @@ def generator_with_label(features, labels, batch_size):
 
 
 # import image data and combine labels
-def load_unlabeled_data(image_size, image_dir, extension = '.JPG'):
+def load_unlabeled_data(image_size, image_dir):
     X = []
     for root, folder, files in os.walk(image_dir):
         #print(files)
         for f in files:
             #print(f)
-            if f.endswith(extension):
+            if f.lower().endswith('.jpg') or f.lower().endswith('.png') or f.lower().endswith('.jpeg'):
                 #print(root, folder, f)
                 img = load_img(f'{root}/{f}', target_size=(image_size,image_size,3))
                 img_array = img_to_array(img, dtype='uint8')

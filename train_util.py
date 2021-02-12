@@ -162,5 +162,6 @@ def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, c
                 summary_writer.flush()
         save_path = manager.save()
         print(f"Saved checkpoint for Epoch {e}: {save_path}")
-        print("loss {:1.2f}".format(loss.numpy()))
+        #print("loss {:1.2f}".format(loss.numpy()))
+        print("loss {:1.2f}".format(np.mean(epoch_loss)))
     return model
