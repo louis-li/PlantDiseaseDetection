@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from datetime import date
 
 import tensorflow.keras as keras
 from tensorflow.keras import applications
@@ -23,6 +24,7 @@ from os.path import isfile, join
 
 import importlib
 import data_load
+import util
 
 
 # import image data and combine labels
@@ -50,7 +52,7 @@ def load_data(dataset='Train',image_size = 224, image_dir= 'data/fgvc7/images', 
 def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005, 
              warm_up_reduce_lr_patience = 3, warm_up_early_stop_patience = 6, 
              warm_up_min_lr=0.00005, learning_rate = 0.0001, reduce_lr_patience = 5, 
-             early_stop_patience = 10, min_lr=0.00001, val_train_epoch=3):
+             early_stop_patience = 10, min_lr=0.00001, val_train_epoch=3, submit_to_kaggle = True, submission_filename = "submission/test.csv"):
     #main        
     data_x, data_y  = load_data() 
     x_train, x_val, y_train, y_val = train_test_split(data_x, data_y, test_size=0.30, random_state=42)
@@ -127,10 +129,22 @@ def train_tl(model, batch_size = 64, warm_up_learning_rate = 0.005,
                         verbose=True
                        )
 
+    util.showConfusionMatrix(model, x_val, y_val)
     model.fit(data_load.generator_with_label(x_val, y_val, batch_size),            
                         epochs=val_train_epoch,
                         steps_per_epoch=len(x_train)/batch_size ,
                         verbose=True
                        )
-    #print(history)                   
+    
+    if submit_to_kaggle:
+        # Load test data and their filename for submission file
+        test_x, test_id  = load_data("Test") 
+        test_y = model.predict(test_x)
+        test_pred = tf.nn.softmax(test_y).numpy()
+        test_set = np.hstack((test_id, test_pred))
+        test_set = test_set[test_set[:,1].astype('uint16').argsort()]
+
+        test_DF = pd.DataFrame(test_set, index=test_set[:,1], columns=["image_id","id","healthy","multiple_diseases","rust","scab"])
+        test_DF[["image_id","healthy","multiple_diseases","rust","scab"]].to_csv(submission_filename, index=False)
+            #print(history)                   
     return model, [history, history2]

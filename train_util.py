@@ -3,6 +3,7 @@ import math
 from tensorflow.keras.experimental import CosineDecay
 from data_load import generator
 import numpy as np
+import datetime
 
 def add_to_summary(summary_writer, loss, learning_rate, image1, image2, iteration):
     """Adds loss, learning_rate and images to tensorflow summary"""
@@ -65,11 +66,12 @@ def cosine_similarity(a, b):
     return cos_similarity
 
 
-def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, checkpoint_path = "models\checkpoints", model_summary_path="models\summary"):
+def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, checkpoint_path = "models/checkpoints", model_summary_path="models/summary"):
 
     total_iterations = math.ceil(len(data) / batch_size)
 
     zdim = model.output.shape[1]
+    checkpoint_path = f'models/{model.layers[1].name}_{datetime.date.today().strftime("%Y_%m_%d")}_checkpoints'
 
     lr_decayed_fn = tf.keras.experimental.CosineDecay( lr, total_iterations)
     optimizer = tf.keras.optimizers.SGD(learning_rate=lr, momentum=0.9)
