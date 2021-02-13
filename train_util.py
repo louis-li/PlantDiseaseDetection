@@ -90,9 +90,10 @@ def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, c
         start = time.time()
         epoch_loss = [] 
         checkpoint = tf.train.Checkpoint(step=tf.Variable(1), optimizer=optimizer, net=model)
-        print(f"********************************************************************")
-        print(f"**                        Warmup Epoch: {e}                         **")
-        print(f"********************************************************************")
+        #print(f"********************************************************************")
+        #print(f"**                        Warmup Epoch: {e}                         **")
+        #print(f"********************************************************************")
+        print(f"Warmup Epoch {e}: ", end='')
         for i in range(total_iterations):
             image1, image2 = next(images)
             # Train one step
@@ -118,12 +119,13 @@ def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, c
             # 
             checkpoint.step.assign_add(1)
             if checkpoint.step.numpy() % 10 == 0:
-                print(f"Iter: {i+2} Step: {checkpoint.step.numpy()} Loss: {loss.numpy():.5f} LR: {optimizer.__getattribute__('lr').numpy():9f}")
+                #print(f"Iter: {i+2} Step: {checkpoint.step.numpy()} Loss: {loss.numpy():.5f} LR: {optimizer.__getattribute__('lr').numpy():9f}")
                 add_to_summary(summary_writer, loss, optimizer.__getattribute__('lr'), image1[:1], image2[:1], checkpoint.step.numpy())
                 summary_writer.flush()
         save_path = manager.save()
-        print(f"Saved checkpoint for Epoch {e}: {save_path}")
-        print("loss {:1.2f}".format(np.mean(epoch_loss)))
+        print("time: {:5.0f} loss {:1.2f}  ".format(time.time() - start, np.mean(epoch_loss)), end='')
+        print(f"checkpoint: {save_path}")
+        #print("loss {:1.2f}".format(np.mean(epoch_loss)))
 
     # train all layers
     for l in model.layers:
