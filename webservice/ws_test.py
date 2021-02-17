@@ -28,16 +28,16 @@ def validate_image(stream):
 
 @app.route("/")
 def index():
-    print(request)
-    return render_template('test.html', pred=0)
+    #print(request)
+    return render_template('index.html', pred=0)
 
 @app.route('/predict', methods=['POST'])
 def predict():
     image_size = 299
-    print(request)
-    print(request.data)
+    #print(request)
+    #print(request.data)
     nparr = np.frombuffer(request.data, np.uint8)
-    print(nparr)
+    #print(nparr)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     img = cv2.resize(img, (image_size,image_size), interpolation = cv2.INTER_AREA)
     cv2.imwrite('test.jpg',img)
@@ -47,18 +47,20 @@ def predict():
 @app.route('/', methods=['POST'])
 def upload_file():
     print("Update - ", end='')
-    print(request.files)
+    print(" Files: ", request.files)
     uploaded_file = request.files['image_uploads']
     filename = secure_filename(uploaded_file.filename)
-    print(filename)
+    print(" File name: ", filename)
     if filename != '':
         file_ext = os.path.splitext(filename)[1]
-        if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
-                file_ext != validate_image(uploaded_file.stream):
+        if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_file.stream):
             abort(400)
         uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-    return redirect(url_for('index'))
-
+    result = {'healthy': 0.99, 'diseases': 0.01}
+    print(result)
+    json_resp = json.dumps(result)
+    print(json_resp)
+    return json_resp
 
 def main():
     """Run the app."""

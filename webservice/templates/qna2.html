@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plant Disease Detection</title>
+    <meta charset="utf-8" />
+    <link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
+    <style>
+        #BotChatGoesHere {
+            border: 1px solid #333;
+            float: left;
+	    min-height: 400px;
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+<body style="font-family:'Segoe UI'">
+    <div id="BotChatGoesHere">
+    </div >
+
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+    <!-- If you do not want to use Cognitive Services library, comment out the following line -->
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/CognitiveServices.js"></script>
+    <script>
+      const params = BotChat.queryParams(location.search);
+
+      const user = {
+        id: params['userid'] || 'userid',
+        name: params['username'] || 'You'
+      };
+
+      const bot = {
+        id: params['botid'] || 'botid',
+        name: params['botname'] || 'botname'
+      };
+
+      window.botchatDebug = params['debug'] && params['debug'] === 'true';
+
+      const speechOptions = {
+          speechRecognizer: new CognitiveServices.SpeechRecognizer({ subscriptionKey: 'b075ee9a745f414d84c3bff8906f6adb' }),
+        speechSynthesizer: new CognitiveServices.SpeechSynthesizer({
+          gender: CognitiveServices.SynthesisGender.Female,
+          subscriptionKey: 'b075ee9a745f414d84c3bff8906f6adb',
+          voiceName: 'Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)'
+        })
+      };
+
+      BotChat.App({
+        bot: bot,
+        locale: params['locale'],
+        // sendTyping: true,    // defaults to false. set to true to send 'typing' activities to bot (and other users) when user is typing
+        speechOptions: speechOptions,
+        user: user,
+        // locale: 'es-es', // override locale to Spanish
+
+        directLine: {
+            secret: 'X56dQB7N3uE.zBAkXjsdoesL45nNkWnZLYryG_o-dnWygR8EsqStDDM',
+            resize: 'detect'
+        }
+      }, document.getElementById('BotChatGoesHere'));
+    </script>
+</body>
+</html>
