@@ -70,11 +70,10 @@ def make_gradcam_heatmap(
     heatmap = np.maximum(heatmap, 0) / np.max(heatmap)
     return heatmap
 
-def showGradCam(model, last_conv_layer_name = "top_conv", classifier_layer_name = ["global_average_pooling2d_3", "dense_5"],  img_path = r"F:\notebooks\capstone\data\fgvc7\images\Test_1.jpg", image_size = 224, save_path = r"data/archive/grad_cam_test1.jpg"):
+def showGradCam(model, last_conv_layer_name = "top_conv", classifier_layer_name = ["global_average_pooling2d_3", "dense_5"],  img_path = r"F:\notebooks\capstone\data\fgvc7\images\Test_1.jpg", image_size = 224, save_path = r"data/archive/grad_cam_test1.jpg", classes = ['healthy', 'multiple_diseases', 'rust', 'scab']):
 
     img_array = get_img_array(img_path, (image_size,image_size))
 
-    classes = ['healthy', 'multiple_diseases', 'rust', 'scab']
     # Print what the top predicted class is
     preds = model.predict(img_array)
     print("Predicted:", classes[np.argmax(preds)])
