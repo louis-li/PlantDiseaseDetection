@@ -123,7 +123,7 @@ def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, c
                 add_to_summary(summary_writer, loss, optimizer.__getattribute__('lr'), image1[:1], image2[:1], checkpoint.step.numpy())
                 summary_writer.flush()
         save_path = manager.save()
-        print("time: {:5.0f} loss {:1.2f}  ".format(time.time() - start, np.mean(epoch_loss)), end='')
+        print("time: {:5.0f} loss {:1.5f}  ".format(time.time() - start, np.mean(epoch_loss)), end='')
         print(f"checkpoint: {save_path}")
         #print("loss {:1.2f}".format(np.mean(epoch_loss)))
 
@@ -167,7 +167,7 @@ def train(model, data, batch_size, warmup_epoch, total_epoch, lr, temperature, c
                 #print(f"Iter: {i+2} Step: {checkpoint.step.numpy()} Loss: {loss.numpy():.5f} LR: {optimizer.__getattribute__('lr').numpy():9f}")
                 add_to_summary(summary_writer, loss, optimizer.__getattribute__('lr'), image1[:1], image2[:1], checkpoint.step.numpy())
                 summary_writer.flush()
-        print("time: {:5.0f} loss {:1.2f}  ".format(time.time() - start, np.mean(epoch_loss)), end='')
+        print("time: {:5.0f} loss {:1.5f}  ".format(time.time() - start, np.mean(epoch_loss)), end='')
         save_path = manager.save()
         print(f"Checkpoint: {save_path}")
         #print("loss {:1.2f}".format(loss.numpy()))
