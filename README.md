@@ -3,15 +3,13 @@
 ## Data
 
 Our final dataset includes 5 sources:
-Plant Village
+ - Plant Village
+ - Tomato Dataset
+ - PlantDoc Dataset
+ - Bing Image Search
+ - GAN Images
 
-Tomato Dataset
-
-PlantDoc Dataset
-
-Bing Image Search
-
-GAN Images
+[Source Images](images/image_source.jpg)
 
 
 ## Data Augmentation:
