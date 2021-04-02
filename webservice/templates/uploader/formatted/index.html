@@ -12,14 +12,10 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/skel.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/skel-layers.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/init.js') }}"></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename='./css/skel.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='./css/style.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/style-xlarge.css') }}" />
 		
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/skel.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/style-xlarg.css') }}" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 	</head>
 	<body class="landing">
@@ -36,49 +32,35 @@
 
 		<!-- Banner -->
 			<section id="banner">
-				<h2>Upload Your Image</h2><br>
-				<hl />
-				<form method="POST" action="" enctype="multipart/form-data" >
-					<div>
-					<label for="image_uploads" class="big button">Click here to select image to upload (PNG, JPG)
-					<input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple></label>
-					</div>
+				<h2>Upload Your Image Here</h2>
+				<p>Choose images to upload (PNG, JPG)</p>
+				<ul class="actions">
+					<form method="POST" action="/pred" enctype="multipart/form-data">
 					<div class="preview">
-						<p>No image has been selected.</p><br><br>
+						<label for="image_uploads" class="big button">Select File</label>
+						<input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple>
 					</div>
-					<div>
-						<button class="big button">Submit</button>
-					</div>
-				</form>
-				<hl>
-				<form>
-				</form>
+					</form>
+					<input type="submit" value="Reset" onClick="window.location.reload();">
+				</ul>
 			</section>
 
 		<!-- One -->
 			<section id="one" class="wrapper style1 align-center">
-				<div class="container" id="diagnosis">
-					{% if scroll %}
-					<script>
-						document.getElementById('{{ scroll }}').scrollIntoView();
-						// or
-						document.location.hash = '#' + '{{ scroll }}';
-					</script>
-					{% endif %}
-
+				<div class="container">
 					<header>
 						<h2>Diagnosis:</h2>
 					</header>
-					<div>
+					
 						<form>
 						<div>
 							{% for file in files %}
-							<img src="{{ url_for('upload', filename=file) }}"  height="400px" width="400px">
+							<img src="{{ url_for('upload', filename=file) }}"  height="250px" width="250px">
 							{% endfor %}
-							<p>{{pred}}</p> 
+							<h1>{{pred}}</h1> 
 						</div>
 						</form>
-					</div>
+					
 				</div>
 			</section>
 
@@ -96,7 +78,11 @@
 								</li>
 								<li>
 									<h3>Mail</h3>
-									<a href="#">medicrop@gmail.com</a>
+									<a href="#">info@trymedicrop</a>
+								</li>
+								<li>
+									<h3>Phone</h3>
+									(555) 555-5555
 								</li>
 							</ul>
 						</section>
@@ -131,10 +117,9 @@
 			preview.appendChild(list);
 	
 			for(const file of curFiles) {
-			  const listItem = document.createElement('p');
+			  const listItem = document.createElement('li');
 			  const para = document.createElement('p');
 			  const see_below = document.createElement('p');
-			  const or_click = document.createElement('p');
 	
 			  if(validFileType(file)) {
 				para.textContent = `${file.name} was successfully uploaded.` ;
@@ -143,12 +128,11 @@
 				image.height = 400;
 				image.width = 400;
 	
+				listItem.appendChild(image);
 				listItem.appendChild(para);
 
-				see_below.textContent = 'Click Submit to see your diagnosis below!';
-				or_click.textContent = 'Or click above to select a new image.';
+				see_below.textContent = `See below for your diagnosis!`;
 				listItem.appendChild(see_below);
-				listItem.appendChild(or_click);
 
 			  } else {
 				para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;

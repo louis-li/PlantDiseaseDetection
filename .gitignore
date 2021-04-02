@@ -5,3 +5,5 @@ models
 submissions
 archive
 EfficientNet-AutoML.log
+uploads/*
+webservice/uploads/*

@@ -66,11 +66,11 @@ def qna():
     #print('files: ', files)
     return render_template('qna2.html')
 
-@app.route("/qna2")
+@app.route("/index2")
 def qna2():
     #files = os.listdir(app.config['UPLOAD_PATH'])
     #print('files: ', files)
-    return render_template('qna2.html')
+    return render_template('uploader/index.html')
 
 
 def getQnaAnswer(question):
@@ -164,8 +164,8 @@ def upload_file():
         #files = getfiles(app.config['UPLOAD_PATH'])
         files = [filename]
         print('files: ', files)
-        return render_template('index.html', pred=pred, files = files)
-    return render_template('index.html', pred='')
+        return render_template('index.html', pred=pred, files = files, scroll="diagnosis")
+    return render_template('index.html', pred='', scroll="diagnosis")
 
 
 #this function returns score for POST request with file
